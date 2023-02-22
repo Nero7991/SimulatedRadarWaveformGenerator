@@ -1,0 +1,7 @@
+Instructions to download the dataset:
+
+1. Python script: Download the Python script downloadDataset.py. The script requires Python3 and some additional modules. Install the required modules and run the script. 
+2. The script downloads the dataset to the current directory. Change saveDir variable if a different directory is desired. 
+3. Run the script. The download process will take long time. Run the script again if it fails to download all the files. It should verify the files that where already downloaded and start from where it stopped last time.
+
+Alternatively, use the the MATLAB script downloadDataset.m similarly to download the dataset.
