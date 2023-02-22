@@ -44,19 +44,28 @@ def fft_vs_time(iq_samples, sample_rate=10e6):
     plt.show()
 
 # Load the .mat file
-mat = h5py.File('data/SimulatedRadarWaveforms/Group3/group3_subset_1.mat', 'r')
+mat = h5py.File('data/SimulatedRadarWaveforms/Group4/group4_subset_10.mat', 'r')
 
 print(mat.keys())
+
+keys = list(mat.keys())
 #sys.exit()
-n = int(input("Enter the index of sample\n"))
+while(True):
+    n = int(input("Enter the index of sample\n"))
+    labels = mat[keys[3]]
+    print("Label = ")
+    print(labels[n])
+    if(not labels[n][0]):
+        if(input("Not a signal, continue (y/n): ") == "y"):
+            break
+    else:
+        break
 
 
 # Access the data
-data = mat['group1_waveformSubset_1']
+data = mat[keys[4]]
 
-labels = mat['group1_radarStatusSubset_1']
-print("Label = ")
-print(labels[n])
+
 
 # Convert the data to a numpy array
 data = data[()]
