@@ -57,47 +57,49 @@ def fft_vs_time(iq_samples, sample_rate=10e6):
     Returns:
         None
     """
-    # Convert the array of tuples to an array of complex numbers
-    complex_samples = np.array([s[0] + 1j * s[1] for s in iq_samples])
+    # # Convert the array of tuples to an array of complex numbers
+    # complex_samples = np.array([s[0] + 1j * s[1] for s in iq_samples])
 
-    # Create the complex-valued numpy array
-    iq_array = np.array(complex_samples, dtype=np.complex64)
-    print(iq_array.shape, iq_array.dtype)
+    # # Create the complex-valued numpy array
+    # iq_array = np.array(complex_samples, dtype=np.complex64)
+    # print(iq_array.shape, iq_array.dtype)
+
+    iq_array = iq_samples
 
     #iq_array = extract_signal(iq_array)
 
-    # Generate some sample IQ data
-    fs = 10e6  # Sample rate
-    t = np.arange(0, 1, 1/fs)  # Time vector
+    # # Generate some sample IQ data
+    # fs = 10e6  # Sample rate
+    # t = np.arange(0, 1, 1/fs)  # Time vector
 
-    # Compute the FFT of the IQ samples
-    fft_data = np.fft.fft(iq_array)
+    # # Compute the FFT of the IQ samples
+    # fft_data = np.fft.fft(iq_array)
 
-    # Take the first 10% of the frequency bins
-    num_freq_bins = len(fft_data)
-    fft_data = fft_data[:num_freq_bins // 20]
+    # # Take the first 10% of the frequency bins
+    # # num_freq_bins = len(fft_data)
+    # # fft_data = fft_data[:num_freq_bins // 20]
 
-    print("FFT shape:")
-    print(fft_data.shape)
-    print(fft_data[:5])
+    # print("FFT shape:")
+    # print(fft_data.shape)
+    # print(fft_data[:5])
 
-    # Plot a waterfall of time vs frequency
-    plt.specgram(fft_data, Fs=fs, NFFT=1024, noverlap=16, mode='magnitude')
-    plt.colorbar()
-    plt.show()
-    return
+    # # Plot a waterfall of time vs frequency
+    # plt.specgram(fft_data, Fs=fs, noverlap=16, mode='magnitude')
+    # plt.colorbar()
+    # plt.show()
+    # return
 
-    f,t,Sxx = spectrogram(iq_array, fs= 10e6, nperseg=512, noverlap=0, mode='complex')
+    # f,t,Sxx = spectrogram(iq_array, fs= 10e6, nperseg=512, noverlap=16, mode='complex')
 
-    # Compute the power spectrogram by taking the magnitude squared of the complex-valued spectrogram
-    Sxx = np.abs(Sxx)
-    
-    plt.pcolormesh(t, f, Sxx)
-    plt.show()
-    return
+    # # Compute the power spectrogram by taking the magnitude squared of the complex-valued spectrogram
+    # Sxx = np.abs(Sxx)
+    # print(Sxx.shape)
+    # plt.pcolormesh(t, f, Sxx)
+    # plt.show()
+    # return
 
     #Set FFT size
-    fft_size = 1024
+    fft_size = 500
 
     # Compute the number of time slices and FFT size
     num_slices = int(len(iq_array) / fft_size)
@@ -109,14 +111,24 @@ def fft_vs_time(iq_samples, sample_rate=10e6):
         end_idx = start_idx + fft_size
         spectrum = np.abs(np.fft.fft(iq_array[start_idx:end_idx]))
         spectra[i] = spectrum
+    print(spectra.shape)
 
-    # Create the waterfall plot
-    fig, ax = plt.subplots(figsize=(10, 5))
-    extent = (0, (num_slices - 1) * fft_size / sample_rate, 0, sample_rate / 2e6)
-    ax.imshow(spectra.T, aspect='auto', extent=extent, cmap='jet')
-    ax.set_xlabel('Time (s)')
-    ax.set_ylabel('Frequency (MHz)')
-    ax.set_title('FFT vs Time Waterfall Plot')
+    # # Create the waterfall plot
+    # fig, ax = plt.subplots(figsize=(10, 5))
+    # extent = (0, (num_slices - 1) * fft_size / sample_rate, 0, sample_rate / 2e6)
+    # ax.imshow(spectra.T, aspect='auto', extent=extent, cmap='jet')
+    # ax.set_xlabel('Time (s)')
+    # ax.set_ylabel('Frequency (MHz)')
+    # ax.set_title('FFT vs Time Waterfall Plot')
+    # plt.show()
+
+    mag_array_norm = spectra / np.max(spectra)
+
+    #mag_array_norm = mag_array_norm.reshape(100, -1)
+    
+    # Display the image
+    plt.imshow(mag_array_norm, cmap='gray')
+    plt.axis('off')
     plt.show()
 
 # Load the .mat file
@@ -140,6 +152,7 @@ for i in range(5):
 
 print(labels_processed[:5])
 print(iq_data[:5])
+fft_vs_time(iq_data[0])
 sys.exit()
 
 
